@@ -54,6 +54,23 @@ public:
 		strcpy(this->name, name);
 
 	}
+	Student(const Student& s) :id(noStudents) {
+		this->name = new char[strlen(s.name) + 1];
+		strcpy(this->name, s.name);
+		this->age = s.age;
+
+	}
+	Student& operator=(const Student& s) {
+		if (this->name != NULL) {
+			delete[] this->name;
+			this->name = nullptr;
+		}
+		this->name = new char[strlen(s.name) + 1];
+		strcpy(this->name, s.name);
+		this->age = s.age;
+		return *this;
+
+	}
 
 	//destructor
 	~Student() {
@@ -84,6 +101,8 @@ int main() {
 		cout << "\nname s3: " << s3.getName();
 		cout << "\ns2.name(should be the initial one):" << s2.getName();
 		cout << endl << endl;
+
+		s2 = s3;
 
 	}
 	catch (const char* err) {
