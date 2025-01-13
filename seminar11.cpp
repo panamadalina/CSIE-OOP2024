@@ -1,179 +1,163 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-class Person {
+class Student {
+private:
     char* name;
     int age;
-
-protected:
-    int test;
-
-public:
-    int cnp;
-
-    // Default Constructor
-    Person() {
-        cout << "\n[Person] Calling...Constr without params ...";
-        this->name = new char[strlen("N/A") + 1];
-        strcpy(this->name, "N/A");
-        this->age = 18;
-    }
-
-    // Parameterized Constructor
-    Person(const char* name, int age) {
-        if (age <= 0 || name == NULL || strlen(name) == 0) {
-            throw new exception("incorrect params");
-        }
-        else {
-            cout << "\n[Person] Calling...Constr with params ...";
-            this->name = new char[strlen(name) + 1];
-            strcpy(this->name, name);
-            this->age = age;
-        }
-    }
-
-    // Copy Constructor
-    Person(const Person& s) {
-        cout << "\n[Person] Calling...Copy constr ...";
-        this->name = new char[strlen(s.name) + 1];
-        strcpy(this->name, s.name);
-        this->age = s.age;
-    }
-
-    // Op=
-    Person& operator=(const Person& s) {
-        cout << "\n[Person] Calling...Op = ...";
-        if (this->name != NULL) {
-            delete[] this->name;
-            this->name = nullptr;
-        }
-        this->name = new char[strlen(s.name) + 1];
-        strcpy(this->name, s.name);
-        this->age = s.age;
-        return *this;
-    }
-
-    // Getters
-    char* getName() {
-        cout << "\n[Person] Calling...Get name ...";
-        char* copieNumme = new char[strlen(this->name) + 1];
-        strcpy(copieNumme, this->name);
-        return copieNumme;
-    }
-
-    int getAge() {
-        cout << "\n[Person] Calling...Get age ...";
-        return this->age;
-    }
-
-    // Setters
-    void setName(const char* name) {
-        cout << "\n[Person] Calling...Set name ...";
-        if (this->name != NULL) {
-            delete[] this->name;
-            this->name = nullptr;
-        }
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-    }
-
-    // Destructor
-    ~Person() {
-        if (this->name != NULL) {
-            cout << "\n[Person] Calling...destruct ...";
-            delete[] this->name;
-            this->name = nullptr;
-        }
-    }
-    friend ostream& operator<<(ostream& out, Person& p);
-};
-
-// Overloading << for Person
-ostream& operator<<(ostream& out, Person& p) {
-    out << "\nPerson: " << p.name << ", age: " << p.age;
-    return out;
-}
-
-// Student Class 
-class Student : public Person {
     char* university;
 
 public:
-    // Default Constructor
-    Student() : Person() {
-        cout << "\n[Student] Calling...Constr without params ...";
-        this->university = 0;
+    // Default constructor
+    Student() {
+        cout << "\n~Default constructor->Student: Anonymous";
+        this->name = new char[strlen("Anonymous") + 1];
+        strcpy(this->name, "Anonymous");
+        this->age = 0;
+        this->university = new char[strlen("Unknown") + 1];
+        strcpy(this->university, "Unknown");
     }
 
     // Constructor with params
-    Student(const char* name, int age, const char* university) : Person(name, age) {
-        cout << "\n[Student] Calling...Constr with params ...";
+    Student(const char* name, int age, const char* university) : age(age) {
+        cout << "\n~Construct with params->Student: " << name;
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
         this->university = new char[strlen(university) + 1];
         strcpy(this->university, university);
     }
 
+    // Copy constructor
+    Student(const Student& s) {
+        cout << "\n~Copy constructor->Student: " << s.name;
+        this->name = new char[strlen(s.name) + 1];
+        strcpy(this->name, s.name);
+        this->age = s.age;
+        this->university = new char[strlen(s.university) + 1];
+        strcpy(this->university, s.university);
+    }
 
-	// Copy Constructor
-	Student(const Student& s) {
-		this->university = new char[strlen(s.university) + 1];
-		strcpy(this->university, s.university);
-	}
-
-	// Operator =
-	Student& operator=(const Student& s) {
-		cout << "\n[Student] Calling...Op = ...";
-		if (this->university != NULL) {
-			delete[] this->university;
-			this->university = nullptr;
-
-		}
-		this->university = new char[strlen(s.university) + 1];
-		strcpy(this->university, s.university);
-		return *this;
-	}
-
-
-
+    // Assignment operator
+    Student& operator=(const Student& s) {
+        cout << "\n~Operator= ->Student: " << s.name;
+        if (this->name != NULL) {
+            delete[] this->name;
+        }
+        if (this->university != NULL) {
+            delete[] this->university;
+        }
+        this->name = new char[strlen(s.name) + 1];
+        strcpy(this->name, s.name);
+        this->age = s.age;
+        this->university = new char[strlen(s.university) + 1];
+        strcpy(this->university, s.university);
+        return *this;
+    }
 
     // Destructor
     ~Student() {
-		if (this->university != NULL) {// only university is allocated dinamically
-            cout << "\n[Student] Calling...destruct ...";
+        cout << "\n~Destructor->Student: " << this->name;
+        if (this->name != NULL) {
+            delete[] this->name;
+        }
+        if (this->university != NULL) {
             delete[] this->university;
-            this->university = nullptr;
         }
     }
 
+    // Getters
+    char* getName() const {
+		char* copy = new char[strlen(this->name) + 1];
+		strcpy(copy, this->name);
+		return copy;
+    }
 
+    int getAge() const {
+        return this->age;
+    }
 
-    friend ostream& operator<<(ostream& out, Student& s);
+    char* getUniversity() const {
+        return this->university;
+    }
+    //op<<
+    friend ostream& operator<<(ostream& out, const Student& s);
 };
 
-// Overloading << for Student
-ostream& operator<<(ostream& out, Student& s) {
+ostream& operator<<(ostream& out, const Student& s) {
+    out << "\nStudent " << s.getName() << " is " << s.getAge()
+        << " years old and studies at: " << s.getUniversity();
+    return out;
+}
+//Has-a relationship (1-n): professor->diploma, etc.
+class Domain {
+private:
+    Student* studentList;
+    int studentCount;
+    char* name;
 
-	out << "\nStudent: " << s.getName() << ", age: " << s.getAge();
-    out << " is at university: " << s.university;
+public:
+    // Default constructor
+    Domain() {
+        this->name = new char[strlen("Unknown") + 1];
+        strcpy(this->name, "Unknown");
+        this->studentList = NULL;
+        this->studentCount = 0;
+    }
+
+    // Parameterized constructor
+    Domain(const char* name, Student* students, int count) {
+        cout << "\n~Parameterized constructor->Domain: " << name;
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
+        this->studentList = new Student[count];
+        this->studentCount = count;
+        for (int i = 0; i < count; i++) {
+            this->studentList[i] = students[i];
+        }
+    }
+
+    // Destructor
+    ~Domain() {
+        if (this->name != NULL) {
+            delete[] this->name;
+        }
+        if (this->studentList != NULL) {
+            delete[] this->studentList;
+        }
+    }
+
+    friend ostream& operator<<(ostream& out, const Domain& d);
+};
+
+ostream& operator<<(ostream& out, const Domain& d) {
+    out << "\nIn domain: " << d.name << " we have the students: ";
+    for (int i = 0; i < d.studentCount; i++) {
+        out << d.studentList[i] << " ";
+    }
     return out;
 }
 
 int main() {
+    Student s1("Mada", 21, "CSIE");
+    Student s2;
+    s2 = s1;
 
-   // Person p;
-   // cout << p;
-	cout << "\n-------------------\n";
-	Student s1("Mada", 20, "UBB");
+    cout << s1;
 
-    cout << "\nS1:\n" << s1;
+    cout << endl << endl;
+    Student s3("Alex", 22, "Politehnica");
+    Student s4("Andrew", 24, "Informatics University");
+    Student* studentList = new Student[3];
+    studentList[0] = s1;
+    studentList[1] = s3;
+    studentList[2] = s4;
 
-    cout << "\n-------------------\n";
-	//Student s2 = s1;
-	//cout << "\nS2:\n" << s2;
+    cout << endl << endl;
+    Domain d("IT", studentList, 3);
+    cout << d;
 
- //   cout << "\n-------------------\n";
-	//Student s3;
-	//s3 = s1; 
-	//cout << "\nS3:\n" << s3;
+    cout << endl << endl;
 
+    delete[] studentList; // Free allocated memory for student list
     return 0;
 }
